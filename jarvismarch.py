@@ -2,6 +2,8 @@ class Point:
     def __init__(self, x, y):
         self.x = x
         self.y = y
+    def __str__(self):
+        return "({},{})".format(self.x, self.y)
  
 def Left_index(points):
      
@@ -27,8 +29,18 @@ def orientation(p, q, r):
     '''
     val = (q.y - p.y) * (r.x - q.x) - \
           (q.x - p.x) * (r.y - q.y)
+
+    print('turn value for triplet {}, {}, {} is : {}'.format(p,q,r,val))
  
-    return val
+    if val == 0:
+        print('collinear points')
+        return 0
+    elif val > 0:
+        print('lies on the right')
+        return 1
+    else:
+        print('lies on the left')
+        return 2
  
 def convexHull(points, n):
      
@@ -38,8 +50,10 @@ def convexHull(points, n):
  
     # Find the leftmost point
     l = Left_index(points)
+    print('left most point: {}'.format(points[l]))
  
     hull = []
+    print('hull = {}'.format(hull))
      
     '''
     Start from leftmost point, keep moving counterclockwise
@@ -51,7 +65,11 @@ def convexHull(points, n):
     while(True):
          
         # Add current point to result
-        hull.append(p)
+        print('add point {} to hull'.format(points[p]))
+        hull.append(points[p])
+        for x in hull:
+            print(x)
+        print('\n\n')
  
         '''
         Search for a point 'q' such that orientation(p, q,
@@ -60,15 +78,18 @@ def convexHull(points, n):
         wise point in q. If any point 'i' is more counterclock-
         wise than q, then update q.
         '''
-        q = (p + 1) % n
+        q = 0
+        print('endpoint: {}'.format(points[q]))
  
         for i in range(n):
+            print('checking for point {}'.format(points[i]))
              
             # If i is more counterclockwise
             # than current q, then update q
-            if(orientation(points[p],
+            if(q==p or orientation(points[p],
                            points[i], points[q]) == 2):
                 q = i
+                print('new endpoint: {}'.format(points[q]))
  
         '''
         Now q is the most counterclockwise with respect to p
@@ -82,8 +103,8 @@ def convexHull(points, n):
             break
  
     # Print Result
-    for each in hull:
-        print(points[each].x, points[each].y)
+    for x in hull:
+        print(x)
  
 # Driver Code
 points = []
@@ -93,6 +114,7 @@ points.append(Point(1, 1))
 points.append(Point(2, 1))
 points.append(Point(3, 0))
 points.append(Point(0, 0))
+points.append(Point(0, 4))
 points.append(Point(3, 3))
  
 convexHull(points, len(points))
